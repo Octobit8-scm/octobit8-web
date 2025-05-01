@@ -4,7 +4,7 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 trigger:
-  - main
+  - master
 
 variables:
   - group: octobit8-variables
@@ -16,27 +16,6 @@ variables:
     value: "$(Build.SourcesDirectory)/terraform/azure"
 
 stages:
-  - stage: Build
-    displayName: Build and Push
-    jobs:
-      - job: Build
-        displayName: Build and Push Docker Image
-        pool:
-          vmImage: "ubuntu-latest"
-        steps:
-          - task: Docker@2
-            displayName: Build and Push
-            inputs:
-              containerRegistry: |
-                type: ACR
-                name: $(acr_name)
-              repository: $(app_name)
-              command: buildAndPush
-              Dockerfile: $(dockerfilePath)
-              tags: |
-                $(tag)
-                latest
-
   - stage: Terraform
     displayName: Terraform Deployment
     dependsOn: Build
@@ -90,7 +69,27 @@ stages:
               script: |
                 cd $(terraformDirectory)
                 terraform apply -auto-approve tfplan
-
+  - stage: Build
+    displayName: Build and Push
+    jobs:
+      - job: Build
+        displayName: Build and Push Docker Image
+        pool:
+          vmImage: "ubuntu-latest"
+        steps:
+          - task: Docker@2
+            displayName: Build and Push
+            inputs:
+              containerRegistry: |
+                type: ACR
+                name: $(acr_name)
+              repository: $(app_name)
+              command: buildAndPush
+              Dockerfile: $(dockerfilePath)
+              tags: |
+                $(tag)
+                latest
+                
   - stage: Deploy
     displayName: Deploy to AKS
     dependsOn: Terraform
