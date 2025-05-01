@@ -4,18 +4,117 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 trigger:
-- master
+  - main
 
-pool:
-  vmImage: ubuntu-latest
+variables:
+  - group: octobit8-variables
+  - name: dockerfilePath
+    value: "$(Build.SourcesDirectory)/Dockerfile"
+  - name: tag
+    value: "$(Build.BuildId)"
+  - name: terraformDirectory
+    value: "$(Build.SourcesDirectory)/terraform/azure"
 
-steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '20.x'
-  displayName: 'Install Node.js'
+stages:
+  - stage: Build
+    displayName: Build and Push
+    jobs:
+      - job: Build
+        displayName: Build and Push Docker Image
+        pool:
+          vmImage: "ubuntu-latest"
+        steps:
+          - task: Docker@2
+            displayName: Build and Push
+            inputs:
+              containerRegistry: |
+                type: ACR
+                name: $(acr_name)
+              repository: $(app_name)
+              command: buildAndPush
+              Dockerfile: $(dockerfilePath)
+              tags: |
+                $(tag)
+                latest
 
-- script: |
-    npm install
-    npm run build
-  displayName: 'npm install and build'
+  - stage: Terraform
+    displayName: Terraform Deployment
+    dependsOn: Build
+    jobs:
+      - job: Terraform
+        displayName: Deploy Infrastructure
+        pool:
+          vmImage: "ubuntu-latest"
+        steps:
+          - task: AzureCLI@2
+            displayName: "Azure CLI Login"
+            inputs:
+              azureSubscription: "$(azureSubscription)"
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              inlineScript: |
+                az login --service-principal -u $(servicePrincipalId) -p $(servicePrincipalKey) --tenant $(tenantId)
+
+          - task: Bash@3
+            displayName: "Install Terraform"
+            inputs:
+              targetType: "inline"
+              script: |
+                wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg
+                echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+                sudo apt update && sudo apt install terraform
+
+          - task: Bash@3
+            displayName: "Terraform Init"
+            inputs:
+              targetType: "inline"
+              script: |
+                cd $(terraformDirectory)
+                terraform init -backend-config="storage_account_name=$(terraformStateStorageAccount)" \
+                              -backend-config="container_name=$(terraformStateContainer)" \
+                              -backend-config="key=terraform.tfstate" \
+                              -backend-config="resource_group_name=$(terraformStateResourceGroup)"
+
+          - task: Bash@3
+            displayName: "Terraform Plan"
+            inputs:
+              targetType: "inline"
+              script: |
+                cd $(terraformDirectory)
+                terraform plan -out=tfplan
+
+          - task: Bash@3
+            displayName: "Terraform Apply"
+            inputs:
+              targetType: "inline"
+              script: |
+                cd $(terraformDirectory)
+                terraform apply -auto-approve tfplan
+
+  - stage: Deploy
+    displayName: Deploy to AKS
+    dependsOn: Terraform
+    jobs:
+      - job: Deploy
+        displayName: Deploy to AKS
+        pool:
+          vmImage: "ubuntu-latest"
+        steps:
+          - task: AzureCLI@2
+            displayName: "Azure CLI"
+            inputs:
+              azureSubscription: "$(azureSubscription)"
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              inlineScript: |
+                # Login to Azure
+                az login --service-principal -u $(servicePrincipalId) -p $(servicePrincipalKey) --tenant $(tenantId)
+
+                # Get AKS credentials
+                az aks get-credentials --resource-group $(resourceGroupName) --name $(clusterName)
+
+                # Update image in deployment
+                kubectl set image deployment/$(app_name) $(app_name)=$(acr_name).azurecr.io/$(app_name):$(tag) -n $(namespace)
+
+                # Wait for rollout to complete
+                kubectl rollout status deployment/$(app_name) -n $(namespace)
