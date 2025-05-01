@@ -49,31 +49,9 @@ stages:
               ArtifactName: "next-build"
               publishLocation: "Container"
 
-  - stage: BuildDocker
-    displayName: Build and Push Docker
-    dependsOn: BuildReact
-    jobs:
-      - job: BuildDocker
-        displayName: Build and Push Docker Image
-        pool:
-          vmImage: "ubuntu-latest"
-        steps:
-          - task: Docker@2
-            displayName: Build and Push
-            inputs:
-              containerRegistry: |
-                type: ACR
-                name: $(acr_name)
-              repository: $(app_name)
-              command: buildAndPush
-              Dockerfile: $(dockerfilePath)
-              tags: |
-                $(tag)
-                latest
-
   - stage: Terraform
     displayName: Terraform Deployment
-    dependsOn: BuildDocker
+    dependsOn: BuildReact
     jobs:
       - job: Terraform
         displayName: Deploy Infrastructure
@@ -125,9 +103,41 @@ stages:
                 cd $(terraformDirectory)
                 terraform apply -auto-approve tfplan
 
+  - stage: BuildDocker
+    displayName: Build and Push Docker
+    dependsOn: Terraform
+    jobs:
+      - job: BuildDocker
+        displayName: Build and Push Docker Image
+        pool:
+          vmImage: "ubuntu-latest"
+        steps:
+          - task: AzureCLI@2
+            displayName: "Azure CLI Login"
+            inputs:
+              azureSubscription: "$(azureSubscription)"
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              inlineScript: |
+                az login --service-principal -u $(servicePrincipalId) -p $(servicePrincipalKey) --tenant $(tenantId)
+                az acr login --name $(acr_name)
+
+          - task: Docker@2
+            displayName: Build and Push
+            inputs:
+              containerRegistry: |
+                type: ACR
+                name: $(acr_name)
+              repository: $(app_name)
+              command: buildAndPush
+              Dockerfile: $(dockerfilePath)
+              tags: |
+                $(tag)
+                latest
+
   - stage: Deploy
     displayName: Deploy to AKS
-    dependsOn: Terraform
+    dependsOn: BuildDocker
     jobs:
       - job: Deploy
         displayName: Deploy to AKS
