@@ -6,9 +6,14 @@ import { ArrowRightIcon, CheckIcon, ArrowLeftIcon } from '@heroicons/react/24/ou
 import Link from 'next/link';
 import Image from 'next/image';
 import RegistrationForm from '@/app/components/RegistrationForm';
+import { useRouter } from 'next/navigation';
+import RazorpayPayment from '@/app/components/RazorpayPayment';
 
 export default function AzureDevOps() {
+  const router = useRouter();
   const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
+  const [showPayment, setShowPayment] = useState(false);
+  const [paymentError, setPaymentError] = useState<string | null>(null);
 
   const modules = [
     {
@@ -52,6 +57,24 @@ export default function AzureDevOps() {
     'Course completion certificate',
     'Certification guidance and resources'
   ];
+
+  const handlePaymentSuccess = async (response: any) => {
+    try {
+      // Here you would typically make an API call to verify the payment
+      // and update the user's enrollment status
+      console.log('Payment successful:', response);
+      router.push('/payment-success');
+    } catch (error) {
+      console.error('Error handling payment success:', error);
+      setPaymentError('There was an error processing your payment. Please try again.');
+    }
+  };
+
+  const handlePaymentError = (error: any) => {
+    console.error('Payment failed:', error);
+    setPaymentError(error.message || 'Payment failed. Please try again.');
+    setShowPayment(false);
+  };
 
   return (
     <main className="min-h-screen bg-gray-50">
@@ -226,12 +249,31 @@ export default function AzureDevOps() {
               <p className="text-gray-600 mb-8">
                 Lifetime access to course materials and updates
               </p>
-              <button
-                onClick={() => setIsRegistrationOpen(true)}
-                className="inline-block bg-primary text-white px-8 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors"
-              >
-                Enroll Now
-              </button>
+              <div className="mt-8">
+                {paymentError && (
+                  <div className="mb-4 p-4 bg-red-50 text-red-600 rounded-lg">
+                    {paymentError}
+                  </div>
+                )}
+                {!showPayment ? (
+                  <button
+                    onClick={() => {
+                      setPaymentError(null);
+                      setShowPayment(true);
+                    }}
+                    className="inline-block bg-primary text-white px-8 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors"
+                  >
+                    Test Payment - ₹1
+                  </button>
+                ) : (
+                  <RazorpayPayment
+                    amount={1}
+                    courseName="Azure DevOps Training - Test"
+                    onSuccess={handlePaymentSuccess}
+                    onError={handlePaymentError}
+                  />
+                )}
+              </div>
             </div>
           </motion.div>
         </div>

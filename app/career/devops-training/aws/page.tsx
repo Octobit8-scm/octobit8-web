@@ -6,9 +6,13 @@ import { ArrowRightIcon, CheckIcon, ArrowLeftIcon } from '@heroicons/react/24/ou
 import Link from 'next/link';
 import Image from 'next/image';
 import RegistrationForm from '@/app/components/RegistrationForm';
+import { useRouter } from 'next/navigation';
+import RazorpayPayment from '@/app/components/RazorpayPayment';
 
 export default function AWSDevOps() {
+  const router = useRouter();
   const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
+  const [showPayment, setShowPayment] = useState(false);
 
   const modules = [
     {
@@ -52,6 +56,15 @@ export default function AWSDevOps() {
     'Course completion certificate',
     'Certification guidance and resources'
   ];
+
+  const handlePaymentSuccess = async (response: any) => {
+    console.log('Payment successful:', response);
+    router.push('/payment-success');
+  };
+
+  const handlePaymentError = (error: any) => {
+    console.error('Payment failed:', error);
+  };
 
   return (
     <main className="min-h-screen bg-gray-50">
@@ -226,12 +239,23 @@ export default function AWSDevOps() {
               <p className="text-gray-600 mb-8">
                 Lifetime access to course materials and updates
               </p>
-              <button
-                onClick={() => setIsRegistrationOpen(true)}
-                className="inline-block bg-primary text-white px-8 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors"
-              >
-                Enroll Now
-              </button>
+              <div className="mt-8">
+                {!showPayment ? (
+                  <button
+                    onClick={() => setShowPayment(true)}
+                    className="inline-block bg-primary text-white px-8 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors"
+                  >
+                    Enroll Now - ₹20,000
+                  </button>
+                ) : (
+                  <RazorpayPayment
+                    amount={20000}
+                    courseName="AWS DevOps Training"
+                    onSuccess={handlePaymentSuccess}
+                    onError={handlePaymentError}
+                  />
+                )}
+              </div>
             </div>
           </motion.div>
         </div>
