@@ -37,25 +37,19 @@ export default function About() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative py-20 bg-gradient-to-r from-gray-900 to-gray-800 text-white">
-        <motion.div 
-          className="absolute inset-0 bg-gradient-to-r from-gray-900 to-gray-800 opacity-10"
-          initial={{ scale: 1.2 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 1.5, ease: "easeOut" }}
-        />
-        <div className="container relative z-10">
+      <section className="bg-gradient-to-r from-gray-900 to-gray-800 text-white py-20">
+        <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            transition={{ duration: 0.5 }}
             className="text-center"
           >
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-200">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6">
               About Octobit8
             </h1>
-            <p className="text-xl text-gray-200 mb-8 max-w-2xl mx-auto">
-              We are a team of passionate developers and designers dedicated to creating exceptional digital experiences.
+            <p className="text-xl text-gray-100 max-w-3xl mx-auto">
+              Empowering businesses through innovative technology solutions
             </p>
           </motion.div>
         </div>

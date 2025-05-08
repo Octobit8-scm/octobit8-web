@@ -72,15 +72,30 @@ const IndustriesPage: React.FC = () => {
         </div>
 
         {/* CTA Section */}
-        <div className="mt-16 text-center">
-          <h2 className="text-3xl font-bold mb-4">Ready to Transform Your Industry?</h2>
-          <p className="text-xl text-gray-600 mb-8">
-            Let's discuss how we can help you achieve your goals
-          </p>
-          <Link href="/contact" className="btn-primary">
-            Contact Us
-          </Link>
-        </div>
+        <section className="py-20 bg-gradient-to-r from-gray-900 to-gray-800 text-white">
+          <div className="container">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="text-center"
+            >
+              <h2 className="text-4xl font-bold mb-4">Ready to Transform Your Industry?</h2>
+              <p className="text-xl text-gray-200 mb-8">
+                Let's discuss how we can help you achieve your goals
+              </p>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Link href="/contact" className="bg-white text-gray-900 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-300">
+                  Get in Touch
+                </Link>
+              </motion.div>
+            </motion.div>
+          </div>
+        </section>
       </div>
     </div>
   );

@@ -1,171 +1,177 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { PhoneIcon, EnvelopeIcon, MapPinIcon } from '@heroicons/react/24/outline';
 import { FaLinkedin, FaTwitter, FaGithub, FaInstagram } from 'react-icons/fa';
 
 export default function Footer() {
   return (
-    <footer className="bg-gradient-to-r from-gray-900 to-gray-800 text-white">
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
+    <footer className="bg-gray-900 text-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Company Info */}
-          <div className="md:col-span-2">
-            <h3 className="text-xl font-bold mb-4">Octobit8</h3>
-            <p className="text-white">
-              Transforming businesses through innovative IT solutions and digital expertise.
+          <div className="lg:col-span-2 space-y-4">
+            <div className="flex items-center">
+              <Image
+                src="/logo.png"
+                alt="Octobit8 Logo"
+                width={150}
+                height={50}
+                className="h-8 w-auto sm:h-10"
+              />
+            </div>
+            <p className="text-gray-400 text-sm">
+              Empowering businesses with cutting-edge technology solutions and digital transformation services.
             </p>
+            {/* Social Media Links */}
+            <div className="mt-6">
+              <h3 className="text-lg font-semibold mb-4">Follow Us</h3>
+              <div className="flex gap-4">
+                <a
+                  href="https://www.linkedin.com/company/octobit8"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  <FaLinkedin className="w-6 h-6" />
+                </a>
+                <a
+                  href="https://twitter.com/octobit8"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  <FaTwitter className="w-6 h-6" />
+                </a>
+                <a
+                  href="https://github.com/octobit8"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  <FaGithub className="w-6 h-6" />
+                </a>
+                <a
+                  href="https://www.instagram.com/octobit8"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  <FaInstagram className="w-6 h-6" />
+                </a>
+              </div>
+            </div>
           </div>
 
           {/* Quick Links */}
-          <div className="md:col-span-2">
-            <h3 className="text-xl font-bold mb-4">Quick Links</h3>
-            <ul className="space-y-2">
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">Quick Links</h3>
+            <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/" className="text-white hover:text-gray-300 transition-colors duration-200">
-                  Home
-                </Link>
+                <a href="/about" className="text-gray-400 hover:text-white transition-colors">
+                  About Us
+                </a>
               </li>
               <li>
-                <Link href="/services" className="text-white hover:text-gray-300 transition-colors duration-200">
+                <a href="/services" className="text-gray-400 hover:text-white transition-colors">
                   Services
-                </Link>
+                </a>
               </li>
               <li>
-                <Link href="/industries" className="text-white hover:text-gray-300 transition-colors duration-200">
+                <a href="/industries" className="text-gray-400 hover:text-white transition-colors">
                   Industries
-                </Link>
+                </a>
               </li>
               <li>
-                <Link href="/about" className="text-white hover:text-gray-300 transition-colors duration-200">
-                  About
-                </Link>
+                <a href="/career" className="text-gray-400 hover:text-white transition-colors">
+                  Career
+                </a>
               </li>
               <li>
-                <Link href="/contact" className="text-white hover:text-gray-300 transition-colors duration-200">
+                <a href="/contact" className="text-gray-400 hover:text-white transition-colors">
                   Contact
-                </Link>
+                </a>
               </li>
             </ul>
           </div>
 
           {/* Services */}
-          <div className="md:col-span-2">
-            <h3 className="text-xl font-bold mb-4">Services</h3>
-            <ul className="space-y-2">
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">Services</h3>
+            <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/services/website-development" className="text-white hover:text-gray-300 transition-colors duration-200">
+                <a href="/services/website-development" className="text-gray-400 hover:text-white transition-colors">
                   Website Development
-                </Link>
+                </a>
               </li>
               <li>
-                <Link href="/services/devops-cloud" className="text-white hover:text-gray-300 transition-colors duration-200">
+                <a href="/services/devops-cloud" className="text-gray-400 hover:text-white transition-colors">
                   DevOps & Cloud Solutions
-                </Link>
+                </a>
               </li>
               <li>
-                <Link href="/services/ai-development" className="text-white hover:text-gray-300 transition-colors duration-200">
-                  AI Agent Development
-                </Link>
+                <a href="/services/ai-development" className="text-gray-400 hover:text-white transition-colors">
+                  AI Development
+                </a>
+              </li>
+              <li>
+                <a href="/services/staff-augmentation" className="text-gray-400 hover:text-white transition-colors">
+                  Staff Augmentation
+                </a>
               </li>
             </ul>
           </div>
 
-          {/* Varanasi Office */}
-          <div className="md:col-span-3">
-            <h3 className="text-xl font-bold mb-4">Varanasi Office</h3>
-            <div className="space-y-2">
-              <p className="flex items-start gap-2">
-                <MapPinIcon className="w-5 h-5 mt-1 flex-shrink-0" />
-                <span className="text-white">
-                  Octobit8 (OPC) Private Limited<br />
-                  185 BARA LAL CHRAIST NAGAR,<br />
-                  Varanasi, Uttar Pradesh,<br />
-                  India, 221007
-                </span>
-              </p>
-            </div>
-          </div>
-
-          {/* Noida Office */}
-          <div className="md:col-span-3">
-            <h3 className="text-xl font-bold mb-4">Noida Office</h3>
-            <div className="space-y-2">
-              <p className="flex items-start gap-2">
-                <MapPinIcon className="w-5 h-5 mt-1 flex-shrink-0" />
-                <span className="text-white">
-                  Octobit8 (OPC) Private Limited<br />
-                  7th Floor, Plot A/8A,<br />
-                  Knowledge Boulevard, Block A,<br />
-                  Industrial Area, Sector 62,<br />
-                  Noida, Uttar Pradesh
-                </span>
-              </p>
-            </div>
-          </div>
-
           {/* Contact Info */}
-          <div className="md:col-span-6">
-            <h3 className="text-xl font-bold mb-4">Contact Us</h3>
-            <div className="space-y-2">
-              <p className="flex items-center gap-2">
-                <PhoneIcon className="w-5 h-5" />
-                <a href="tel:+919923706784" className="text-white hover:text-gray-300 transition-colors">
-                  +91-9923706784
-                </a>
-              </p>
-              <p className="flex items-center gap-2">
-                <EnvelopeIcon className="w-5 h-5" />
-                <a href="mailto:contact@octobit8.com" className="text-white hover:text-gray-300 transition-colors">
-                  contact@octobit8.com
-                </a>
-              </p>
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">Contact Us</h3>
+            <div className="space-y-4">
+              <div className="flex items-center gap-4">
+                <div className="bg-primary/10 p-3 rounded-full">
+                  <PhoneIcon className="w-6 h-6 text-primary" />
+                </div>
+                <div>
+                  <p className="text-gray-400">+91-9923706784</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="bg-primary/10 p-3 rounded-full">
+                  <EnvelopeIcon className="w-6 h-6 text-primary" />
+                </div>
+                <div>
+                  <p className="text-gray-400">contact@octobit8.com</p>
+                </div>
+              </div>
             </div>
           </div>
+        </div>
 
-          {/* Social Media */}
-          <div className="md:col-span-6">
-            <h3 className="text-xl font-bold mb-4">Follow Us</h3>
-            <div className="flex gap-4">
-              <a
-                href="https://linkedin.com/company/octobit8"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-white hover:text-gray-300 transition-colors"
-              >
-                <FaLinkedin className="w-6 h-6" />
-              </a>
-              <a
-                href="https://twitter.com/octobit8"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-white hover:text-gray-300 transition-colors"
-              >
-                <FaTwitter className="w-6 h-6" />
-              </a>
-              <a
-                href="https://github.com/octobit8"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-white hover:text-gray-300 transition-colors"
-              >
-                <FaGithub className="w-6 h-6" />
-              </a>
-              <a
-                href="https://instagram.com/octobit8"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-white hover:text-gray-300 transition-colors"
-              >
-                <FaInstagram className="w-6 h-6" />
-              </a>
+        {/* Office Addresses */}
+        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="flex items-center gap-4">
+            <div className="bg-primary/10 p-3 rounded-full">
+              <MapPinIcon className="w-6 h-6 text-primary" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold">Varanasi Office</h3>
+              <p className="text-gray-400">185 BARA LAL CHRAIST NAGAR, Varanasi, Uttar Pradesh, India, 221007</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="bg-primary/10 p-3 rounded-full">
+              <MapPinIcon className="w-6 h-6 text-primary" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold">Noida Office</h3>
+              <p className="text-gray-400">7th Floor, Plot A/8A, Knowledge Boulevard, Block A, Industrial Area, Sector 62, Noida, Uttar Pradesh</p>
             </div>
           </div>
         </div>
 
         {/* Copyright */}
-        <div className="border-t border-gray-700 mt-12 pt-8 text-center">
-          <p className="text-white">&copy; {new Date().getFullYear()} Octobit8. All rights reserved.</p>
+        <div className="mt-12 pt-8 border-t border-gray-800 text-center text-sm text-gray-400">
+          <p>&copy; {new Date().getFullYear()} Octobit8. All rights reserved.</p>
         </div>
       </div>
     </footer>

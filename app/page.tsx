@@ -404,7 +404,7 @@ export default function Home() {
               transition={{ duration: 0.5, delay: 0.6 }}
               className="mt-12 text-center"
             >
-              <Link href="/contact" className="text-primary font-semibold flex items-center justify-center gap-2">
+              <Link href="/services/staff-augmentation" className="text-primary font-semibold flex items-center justify-center gap-2">
                 Learn More About Our Staffing Solutions <ArrowRightIcon className="w-4 h-4" />
               </Link>
             </motion.div>

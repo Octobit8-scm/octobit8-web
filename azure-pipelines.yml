@@ -65,7 +65,7 @@ stages:
               scriptType: "bash"
               scriptLocation: "inlineScript"
               inlineScript: |
-                az login --service-principal -u $(servicePrincipalId) -p $(servicePrincipalKey) --tenant $(tenantId)
+                az login --identity
 
           - task: Bash@3
             displayName: "Install Terraform"
@@ -119,7 +119,7 @@ stages:
               scriptType: "bash"
               scriptLocation: "inlineScript"
               inlineScript: |
-                az login --service-principal -u $(servicePrincipalId) -p $(servicePrincipalKey) --tenant $(tenantId)
+                az login --identity
                 az acr login --name $(acr_name)
 
           - task: Docker@2
@@ -152,7 +152,7 @@ stages:
               scriptLocation: "inlineScript"
               inlineScript: |
                 # Login to Azure
-                az login --service-principal -u $(servicePrincipalId) -p $(servicePrincipalKey) --tenant $(tenantId)
+                az login --identity
 
                 # Get AKS credentials
                 az aks get-credentials --resource-group $(resourceGroupName) --name $(clusterName)
